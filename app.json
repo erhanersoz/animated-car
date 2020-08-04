@@ -1,0 +1,13 @@
+{
+  "name": "AnimatedCar",
+  "displayName": "AnimatedCar",
+  "expo": {
+    "name": "AnimatedCar",
+    "slug": "AnimatedCar",
+    "version": "1.0.0",
+    "orientation": "landscape",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
