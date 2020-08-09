@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Image } from 'react-native';
+import PropTypes from 'prop-types';
 
 export default class ScaledImage extends Component {
   constructor(props) {
@@ -9,28 +10,57 @@ export default class ScaledImage extends Component {
   }
 
   componentDidMount() {
-    const {width, height} = Image.resolveAssetSource(this.props.source);
-    if (this.props.width && !this.props.height) {
+    const {width, height, source} = this.props;
+    const imageWidth = Image.resolveAssetSource(source).width;
+    const imageHeight = Image.resolveAssetSource(source).height;
+    if (width && !height) {
       this.setState({
-        width: this.props.width,
-        height: height * (this.props.width / width)
+        width: width,
+        height: imageHeight * (width / imageWidth)
       });
-    } else if (!this.props.width && this.props.height) {
+    } else if (!width && height) {
       this.setState({
-        width: width * (this.props.height / height),
-        height: this.props.height
+        width: imageWidth * (height / imageHeight),
+        height: height
       });
     } else {
-      this.setState({ width: width, height: height });
+      this.setState({ width: imageWidth, height: imageHeight });
     }
   }
 
   render() {
+    const {source} = this.props;
+    const {width,height} = this.state;
     return (
       <Image
-        source={this.props.source}
-        style={{height: this.state.height, width: this.state.width }}
+        source={source}
+        style={{width: width, height: height}}
       />
     );
   }
 }
+
+ScaledImage.propTypes = {
+  source: PropTypes.oneOfType([
+    PropTypes.shape({
+      uri: PropTypes.string,
+      headers: PropTypes.objectOf(PropTypes.string)
+    }),
+    PropTypes.number,
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        uri: PropTypes.string,
+        width: PropTypes.number,
+        height: PropTypes.number,
+        headers: PropTypes.objectOf(PropTypes.string)
+      })
+    )
+  ]).isRequired,
+  height: PropTypes.number,
+  width: PropTypes.number
+};
+
+ScaledImage.defaultProps = {
+  height: null,
+  width: null
+};

@@ -1,12 +1,12 @@
 import React from 'react';
 import {StyleSheet, View, Animated, Dimensions} from 'react-native';
 
-import IconButton from '../components/iconButton';
+import Joystick from "../components/joystick";
 import ScaledImage from '../components/scaledImage';
 
-const BUTTON_HEIGHT = 75;
+const JOYSTICK_HEIGHT = 75;
 const MAP_PADDING_VERTICAL = 10;
-const IMAGE_HEIGHT = Dimensions.get('window').height - BUTTON_HEIGHT - (2*MAP_PADDING_VERTICAL) ;
+const IMAGE_HEIGHT = Dimensions.get('window').height - JOYSTICK_HEIGHT - (2*MAP_PADDING_VERTICAL) ;
 const CAR_HEIGHT = IMAGE_HEIGHT/4;
 
 export default function MainScreen() {
@@ -173,69 +173,37 @@ export default function MainScreen() {
           setIsWaiting(false);
         });
     }
-
   }
 
     return (
       <View style={styles.screenContainer}>
-
-        <View style={styles.body}>
-
-          <View style={styles.playGround}>
+        <View style={styles.scene}>
+          <View>
             <View style={styles.map}>
               <ScaledImage
                 source={require('../assets/maps/map1.png')}
                 height={IMAGE_HEIGHT}
               />
             </View>
-            <Animated.View style={[styles.car, locationStylesForCar ]} >
-              <Animated.View style={[styles.car2, rotateStylesForCar]} >
+            <Animated.View style={[styles.carContainer, locationStylesForCar ]} >
+              <Animated.View style={[styles.car, rotateStylesForCar]} >
                 <ScaledImage
-                  source={require('../assets/car.png')}
+                  source={require('../assets/cars/car.png')}
                   height={CAR_HEIGHT}
                 />
               </Animated.View>
             </Animated.View>
-
           </View>
-
         </View>
-
-        <View style={styles.buttons}>
-
-            <IconButton
-              iconName={'stop'}
-              iconColor={'#b83a1e'}
-              disabled={isWaiting}
-              onPress={() => reset()}
-            />
-
-            <IconButton
-              iconName={'rotate-left'}
-              disabled={isWaiting}
-              onPress={() => turnLeft()}
-            />
-
-            <IconButton
-              iconName={'arrow-up'}
-              disabled={isDisabled || isWaiting}
-              onPress={() => go()}
-            />
-
-            <IconButton
-              iconName={'rotate-right'}
-              disabled={isWaiting}
-              onPress={() => turnRight()}
-            />
-
-            <IconButton
-              iconName={'play'}
-              disabled={isWaiting}
-              iconColor={'#2ea44f'}
-            />
-
-        </View>
-
+        <Joystick
+            style={styles.joystick}
+            isWaiting={isWaiting}
+            isDisabled={isDisabled}
+            reset={reset}
+            turnLeft={turnLeft}
+            go={go}
+            turnRight={turnRight}
+        />
       </View>
     );
 }
@@ -243,33 +211,29 @@ export default function MainScreen() {
 const styles = StyleSheet.create({
   screenContainer:{
     flex:1,
+    backgroundColor:'white',
   },
-  body:{
+  scene:{
     flex:1,
+    justifyContent:'space-around',
+    alignItems:'center',
+  },
+  joystick:{
+    height: JOYSTICK_HEIGHT,
     backgroundColor:'white',
     flexDirection:'row',
     justifyContent:'space-around',
     alignItems:'center',
-  },
-  buttons:{
-    height: BUTTON_HEIGHT,
-    backgroundColor:'white',
-    flexDirection:'row',
-    justifyContent:'space-around',
-    alignItems:'center',
-  },
-  playGround:{
-    position: 'relative',
   },
   map:{
     paddingVertical:MAP_PADDING_VERTICAL,
   },
-  car:{
+  carContainer:{
     top:MAP_PADDING_VERTICAL,
     left:0,
     position:'absolute',
   },
-  car2:{
+  car:{
     top:0,
     left:0,
     position:'absolute',
